@@ -44,7 +44,8 @@ public class Database implements Config {
     }
 
     public void insertValues(String fName, String lName, double gpa) {
-        String query = String.format("insert into students (First_Name, Last_Name, Gpa) values(\"%s\",\"%s\",%f) ",
+        String query = String.format("insert into %s (First_Name, Last_Name, Gpa) values(\"%s\",\"%s\",%f) ",
+                TABLE,
                 fName,
                 lName, gpa);
         exeStatement(connect, query);
@@ -56,10 +57,21 @@ public class Database implements Config {
         }
     }
 
+    public void updateGpa(int id, double gpa) {
+        String query = String.format("update %s set Gpa = %.2f where Student_ID=%d", TABLE, gpa, id);
+        try {
+            statement = connect.prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating the gpa value.");
+            e.printStackTrace();
+        }
+    }
+
     public void start() {
         try {
             connect = connect();
-            insertValues("New", "Name", 50);
+            updateGpa(2, 70);
             printTable();
 
         } catch (SQLException e) {
